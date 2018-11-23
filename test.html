@@ -4,7 +4,91 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 </head>
+<style type="text/css">
+        .chooseBtn {
+            display: none;
+        }
+
+        .choose-label {
+            box-shadow: #ccc 0px 0px 0px 1px;
+            width: 40px;
+            height: 20px;
+            display: inline-block;
+            border-radius: 20px;
+            position: relative;
+            background-color: #bdbdbd;
+            overflow: hidden;
+        }
+
+        .choose-label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border-radius: 20px;
+            background-color: #fff;
+            z-index: 20;
+            -webkit-transition: all 0.5s;
+            transition: all 0.5s;
+        }
+
+        .chooseBtn:checked + label.choose-label:before {
+            left: 20px;
+        }
+
+        .chooseBtn:checked + label.choose-label {
+            background-color: #51ccee;
+        }
+    </style>
 <body>
 	<h1>我的 github </h1>
+	<input type="checkbox" name="sex" id="male" class="chooseBtn" />
+<label for="male" class="choose-label"></label>
 </body>
+<script type="text/javascript">
+let arr = [[1,2,3],[4,6,8],[21,34,56]]
+
+// 二维数组转一维数组
+let newarr = arr.reduce(function(prev,next,index,item) {
+	return prev.concat(next)
+})
+
+console.log(newarr)
+
+//转字符串
+console.log(arr.join(','))
+
+let all = [{cont:30,price:1},{cont:12,price:1}].reduce(function(prev,next){
+	return prev+next.cont*next.price
+},0)
+console.log(all)
+
+let [foo = true] =[1];
+console.log(foo); //控制台打印出true
+
+
+let {fun} = {fun:'有趣',fb:00}
+console.log(fun)
+
+let chai = 'chai'
+let my = `你好${chai}`
+console.log(my)
+
+//对象转数组
+let  json = {
+    '0': 'jspang',
+    '1': '技术胖',
+    '2': '大胖逼逼叨',
+    length:3
+}
+let arrq=Array.from(json);
+console.log(arrq)
+
+
+// 字符串转数组
+let arrv =Array.of('淡淡的','但是','上的v');
+console.log(arrv);
+</script>
 </html>
