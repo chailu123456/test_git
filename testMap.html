@@ -34,11 +34,7 @@
     <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
 
     <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
-
-    <!--加载检索信息窗口-->
-    <!-- <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script> -->
-    <!-- <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" /> -->
-    <title>鼠标绘制工具</title>
+    <title>围栏</title>
 </head>
 <body>
     <div id="allmap" style="overflow:hidden;zoom:1;position:relative;"> 
@@ -49,12 +45,94 @@
         <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
     </div>
     <script type="text/javascript">
-    // 百度地图API功能
-    var map = new BMap.Map('map');
-    var poi = new BMap.Point(114.04254,22.569074);
-    map.centerAndZoom(poi, 14);
-    map.enableScrollWheelZoom();  
-    var overlays = [];
+    // 百度地图API功能 
+    var map = new BMap.Map('map',{enableMapClick: false});
+    var poi = new BMap.Point(104.777201,35.563666);
+    map.centerAndZoom(poi, 5)
+    map.enableScrollWheelZoom()
+    var polygons = []      //所有围栏
+    var labels = [] // 所以lable
+    var pointArr = [
+        [
+            [115.925963,31.906417],
+            [112.798423,30.578625],
+            [116.073142,29.006032],
+            [115.925963,31.906417]
+        ],
+        [
+            [104.777201,35.563666],
+            [102.054401,35.020633],
+            [104.997969,32.874247],
+            [104.777201,35.563666]
+        ]
+    ]
+    arrpoint(pointArr)
+    function arrpoint(pointArr) {
+        console.log(pointArr)
+        for (var i = 0; i < pointArr.length; i++) {
+            let _self = this
+            let allPoints = _self.createPolygon(pointArr[i])
+            //创建关闭按钮
+            _self.createCloseBtn(pointArr[i], i, allPoints)
+            //添加多边形
+            _self.polygons.push(allPoints)
+            _self.map.addOverlay(allPoints)
+        }
+    }
+    function createCloseBtn (location, index, allPoints){
+        // location.boundary = location.boundary ? location.boundary : (location ? location : [[]])
+        let _self = this
+        //创建关闭按钮
+        let opts = {
+          position : new BMap.Point(location[0][0], location[0][1]),    // 指定文本标注所在的地理位置
+          offset   : new BMap.Size(0, 0)    //设置文本偏移量
+        }
+        let label = new BMap.Label("✗", opts);  // 创建文本标注对象
+        label.setStyle({
+            color : "#fff",
+            fontSize : "10px",
+            height : "20px",
+            width : "20px",
+            lineHeight : "20px",
+            textAlign: "center",
+            fontFamily:"微软雅黑",
+            borderRadius: "50%",
+            border: "none",
+            background: "#f30",
+            cursor: "pointer"
+        })
+        _self.labels.push(label)
+        _self.map.addOverlay(label)
+        label.addEventListener("click", function(e){
+            if(index >= 0){
+                if(_self.pointArr.length === 1){
+                    _self.pointArr = []
+                } else {
+                    _self.polygons.splice(index, 1)
+                    _self.labels.splice(index, 1)
+                    _self.pointArr.splice(index, 1)
+                }
+            }
+            //删掉当前围栏视图
+            map.removeOverlay(allPoints)
+            map.removeOverlay(pointArr[index])
+            map.removeOverlay(this)
+            console.log(pointArr)
+        }) 
+    }
+    function createPolygon(location){
+        //将数据中的每个经纬度数组创建为点数组
+        let points = []
+        // let boundary = location.boundary ? location.boundary : (location ? location : [[]])
+        for (var i=0;i<location.length;i++) {
+            points.push(new BMap.Point(location[i][0], location[i][1]))
+        }
+        //创建每个围栏
+        let result1 = new BMap.Polygon(points, {strokeColor:"red", strokeWeight:2, strokeOpacity:0.5});
+        result1.addEventListener('click', function(){console.log(result1)})
+        return result1
+    }
+    var overlays = []
     var overlaycomplete = function(e){
         var result = JSON.parse(JSON.stringify(e.overlay.ia))
         let tmp1 = []
@@ -64,13 +142,21 @@
                 tmp1.push(JSON.stringify(location))
                 item.push(location)
             }
-
             return item
         }, [])
         console.log(result)
-        overlays.push(e.overlay);
-        console.log(overlays)
-    };
+        pointArr.push(result)
+
+        var allPoints = createPolygon(result)
+        polygons.push(allPoints)
+        //创建关闭按钮
+        createCloseBtn(result, polygons.length-1, allPoints)
+        //添加多边形
+        map.addOverlay(allPoints)
+        map.removeOverlay(e.overlay)
+    }
+  //增加多边形
+
     var styleOptions = {
         strokeColor:"red",    //边线颜色。
         fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
@@ -79,6 +165,11 @@
         fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
         strokeStyle: 'solid' //边线的样式，solid或dashed。
     }
+    var size = new BMap.Size(10, 20)
+    map.addControl(new BMap.CityListControl({
+      anchor: BMAP_ANCHOR_TOP_LEFT,
+      offset: size
+    }))
     //实例化鼠标绘制工具
     var drawingManager = new BMapLib.DrawingManager(map, {
         isOpen: false, //是否开启绘制模式
@@ -86,70 +177,31 @@
         drawingToolOptions: {
             anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
             offset: new BMap.Size(5, 5), //偏离值
-            drawingModes : [BMAP_DRAWING_POLYGON] //设置只显示画矩形、圆的模式
+            drawingModes : [BMAP_DRAWING_POLYGON] //设置只显示画矩形模式
         },
-        circleOptions: styleOptions, //圆的样式
-        polylineOptions: styleOptions, //线的样式
         polygonOptions: styleOptions, //多边形的样式
-        rectangleOptions: styleOptions //矩形的样式
-    });  
+    });
      //添加鼠标绘制工具监听事件，用于获取绘制结果
     drawingManager.addEventListener('overlaycomplete', overlaycomplete);
     function clearAll() {
-        for(var i = 0; i < overlays.length; i++){
-            map.removeOverlay(overlays[i]);
+        for(var i = 0; i < polygons.length; i++){
+            map.removeOverlay(polygons[i]);
         }
-        overlays.length = 0
+        for(var i = 0; i < labels.length; i++){
+            map.removeOverlay(labels[i]);
+        }
+        polygons.length = 0
+        labels.length = 0
+        pointArr.length = 0
     }
 </script>
 </body>
-</html>
-<script>
-  var map
-  export default {
-    name: 'addbanner',
-    props: ['data'],
-    name: 'app',
-    data () {
-      return {
-        overlays: []
-      }
-    },
-    methods:{
-      add () {
-        this.$emit('child-say', this.overlays)
-      },
-      cancle () {
-        this.$emit('child-bye')
-      }
-    },
-    mounted () {
-      let that = this
-      map = new BMap.Map('allmap')
-      var poi = new BMap.Point(114.04254,22.569074)
-      map.centerAndZoom(poi, 10)
-      var marker = new BMap.Marker(poi);// 创建标注
-      map.addOverlay(marker)
-      map.enableScrollWheelZoom() //启用滚轮放大缩小，默认禁用
-      map.enableContinuousZoom() //启用地图惯性拖拽，默认禁用
-      map.addEventListener("click",function(e){
-        map.removeOverlay(marker)
-        poi.lat = e.point.lng
-        poi.lat = e.point.lat
-        marker = new BMap.Marker(poi)
-        that.overlays.push(e.point.lng)
-        that.overlays.push(e.point.lat)
-        map.addOverlay(marker)
-      })
-    }
-  }
-</script>
- 
+</html> 
 <style scoped>
 .lon-lat-title {
   padding-left:10px;margin-bottom:6px;height:30px;line-height: 30px;background: #eee;text-align:left;
 }
-#allmap{height: 400px;overflow: hidden;}
+#allmap{height: 600px;overflow: hidden;}
 .map-btn-select{
   margin-top: 10px;
 }

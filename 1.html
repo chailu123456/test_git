@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+   <style type="text/css">
+      body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
+      body{position: relative;}
+      #outMap{height:500px;width:100%;position: absolute;top:2.8rem;}
+      #r-result{width:100%;}
+      .top{width: 95%;height: auto;margin: .5rem auto;position: relative;z-index: 3;font-family: Arial;font-size: 13.3px;}
+      /*.box{width:100%;height:1.5rem;position: absolute;top:0;left: 0;}*/
+      .top input{width: 80%;height: 1.5rem;}
+      .top .btn{background: orangered;border:none;width: 15%;height: 1.5rem;
+         -webkit-appearance: none;
+         -moz-appearance: none;
+         appearance: none;}
+      .moren{width: 80.7%;height: 1.3rem;border-bottom:1px solid #a9a9a9;border-left:1px solid #a9a9a9;border-right:1px solid #a9a9a9;position: absolute; }
+      .img{background: url(search.png)no-repeat;background-size: 80%;}
+      .close{width: 80.7%;height: 1.1rem;line-height:1.1rem;border-bottom:1px solid #a9a9a9;border-left:1px solid #a9a9a9;border-right:1px solid #a9a9a9;position: absolute;top:3.3rem;display: box;display: -webkit-box;}
+      .left{width: 80.7%;height: 1.2rem;}
+      .right{-webkit-box-flex: 1;box-flex:1;border-left:1px solid #a9a9a9;text-align: center;line-height: 1.2rem;}
+   </style>
+   <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=6VArBpbbbMjBVP22TflHkpSq"></script>
+   <!-- <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>  -->
+   <title>百度地图</title>
+</head>
+<body>
+   <!--步骤：1.写一个div用来容纳百度地图;-->
+       <!--2.输入公司的地址之后，获取这个input的value;-->
+       <!--3.点击搜索 使得地图跳到公司的位置;-->
+   <div class="top">
+         <input type="text" id="keyword" />
+         <button class="btn" id="searchResultPanel" onclick="search()">搜索</button>
+   </div>
+   <div id="outMap"></div>
+   <div id="r-result">
+   </div>
+   
+</body>
+</html>
+<script type="text/javascript">
+var point = '深圳'
+var map;
+//初始化地图 
+   map = new BMap.Map("outMap"); 
+   map.centerAndZoom(point, 10); 
+function search(){
+	s()
+	var keyword = document.getElementById("keyword").value;
+	var local = new BMap.LocalSearch(map, {
+	  renderOptions:{map: map}
+	});
+	local.search(keyword)
+}
+function s () {
+	  // map.clearOverlays()
+}
+// var map = new BMap.Map("outMap");
+// map.centerAndZoom("生命科学园", 15);
+// var myCity = new BMap.LocalCity();
+// myCity.get(function(){
+////      alert(rs.name);
+//    map.setCenter(40.0747430000,116.1580900000);
+// });
+
+</script>

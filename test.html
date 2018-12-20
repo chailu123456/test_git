@@ -86,9 +86,30 @@ let  json = {
 let arrq=Array.from(json);
 console.log(arrq)
 
-
+// 去重
+let addrr = ['jspang','技术胖','web','jspang']
+let setArr = new Set(addrr);
+console.log(setArr);//Set {"jspang", "技术胖", "web"}
+console.log(Array.from(setArr))
 // 字符串转数组
 let arrv =Array.of('淡淡的','但是','上的v');
 console.log(arrv);
+
+
+var reg = new RegExp("^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,9})?)|90(([.][0]{1,9})?))$"); // 纬度范围：-90.000000000~90.000000000
+let val = 170.34
+
+if (reg.test(val)) {
+  alert('ok');
+} else {
+  alert('error');
+}
+var reg2 = new RegExp('^-?((0|1?[0-7]?[0-9]?)(([.][0-9]{1,9})?)|180(([.][0]{1,9})?))$'); // 经度范围：-180.000000000~180.000000000;
+let value = '-122.09'
+if (reg2.test(value)) {
+  alert('ok222');
+} else {
+  alert('erroreeeeeee');
+}
 </script>
 </html>

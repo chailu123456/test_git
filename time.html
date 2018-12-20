@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>setiner</title>
+	</head>
+	<body>
+		<div id="are">
+			<span id="timeare">
+ 
+			</span><br>
+			<input type="button" id="btn1" value="start" onclick="start()" />
+			<input type="button" id="btn1" value="stop" onclick="stop()" />
+			
+		</div>
+		<script type="text/javascript">
+			var timer
+			timer=setInterval("dat()",0);
+			function dat() {
+				var date = new Date()
+				var time=date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds();
+            	document.getElementById("timeare").innerHTML=time;
+			}
+			function start(){
+				timer =setInterval("dat()",0)
+			}
+			function stop(){
+				clearInterval(timer);
+			}
+			var num = 0;
+        var i = setInterval(function() {
+            num++;
+            if (num > 10)
+                clearInterval(i);
+        }, 1000);
+		</script>
+	</body>
+</html>
