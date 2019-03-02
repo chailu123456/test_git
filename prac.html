@@ -22,16 +22,89 @@ temp[arr2[i]] = true;//巧妙地方：把数组B的值当成临时数组1的键�
  
 }; 
  
-for (var i = 0; i < arr1.length; i++) { 
- 
-if (!temp[arr1[i]]) { 
- 
-temparray.push(arr1[i]);//巧妙地方：同时把数组A的值当成临时数组1的键并判断是否为真，如果不为真说明没重复，就合并到一个新数组里，这样就可以得到一个全新并无重复的数组 
- 
-} ; 
- 
+for (var i = 0; i < arr1.length; i++) {
+	if (!temp[arr1[i]]) {
+		temparray.push(arr1[i]);//巧妙地方：同时把数组A的值当成临时数组1的键并判断是否为真，如果不为真说明没重复，就合并到一个新数组里，这样就可以得到一个全新并无重复的数组 
+	}
 }; 
  console.log(temparray)
-document.write(temparray.join(",") + ""); 
+document.write(temparray.join(",") + "");
+
+function test(person) {
+  person.age = 26
+  person = {
+    name: 'yyy',
+    age: 30
+  }
+
+  return person
+}
+const p1 = {
+  name: 'yck',
+  age: 25
+}
+const p2 = test(p1)
+console.log(p1) // -> ?
+console.log(p2) // -> ?
+
+function foo() {
+  console.log(this.a)
+}
+var a = 1
+
+foo()
+
+const objs = {
+  a: 2,
+  foo: foo
+}
+
+objs.foo()
+
+const c = new foo()
+
+function a() {
+  return () => {
+    return () => {
+      console.log(this)
+    }
+  }
+}
+// console.log(a()()()) // a is not a function
+
+
+function A() {
+  let a = 1
+  window.B = function () {
+      console.log(a)
+  }
+}
+A()
+B() // 1
+
+ setTimeout(
+    function timer(j) {
+      console.log(j)
+    },3 * 1000,22)
+
+
+let abc = {
+	a: '123',
+	b: 'aaa',
+	d: 'cccc'
+}
+let b = Object.assign({}, abc)
+abc.a = '222'
+console.log(b.a) // 123
+
+
+let obj = {
+	age: '23',
+	name: 'chai'
+}
+let newobj = {...obj}
+obj.age = '17'
+console.log(newobj.age)
+
 </script>
 </html>

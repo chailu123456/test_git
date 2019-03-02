@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script type="text/javascript">
+
+let a = 'da34daf5'
+console.log(a.replace(/[ad]/g,'OP')) // 匹配ad的替换成OP  OPOP34OPOPf5
+console.log(a.replace(/[^ad]/g,'OP')) // 匹配非ad的替换成OP  daOPOPdaOPOP
+console.log(a.replace(/[a-z]/g,'W'))  // 匹配a-z的替换成W  WW34WWW5
+console.log(a.replace(/[a-zA-Z]/g,'S'))  // 匹配a-z和A到Z的替换成S  SS34SSS5
+
+let b = '2019-01-29'
+console.log(b.replace(/[0-9]/g, 'K')) // 将0-9的数字匹配成K   KKKK-KK-KK
+console.log(b.replace(/[0-9-]/g, 'Y')) //将0-9，包括-匹配成Y  YYYYYYYYYY
+
+
+let c = 'This is a body'
+console.log(c.replace(/is/g, '8')) // 匹配所有的is  // Th8 8 a body
+console.log(c.replace(/\bis/g, '8')) // 匹配is的单词边界  This 8 a body
+console.log(c.replace(/\Bis/g, '8')) // 匹配非is的单词边界  Th8 is a body
+
+
+let d = '@adf@qwrr@'
+console.log(d.replace(/@./g, '8')) //匹配@+任意字符替换成8  8df8wrr@
+console.log(d.replace(/^@./g, '8')) // 只匹配（前面的）@+任意字符替换成8，后面的不变 8df@qwrr@
+console.log(d.replace(/.@/g, '8')) // 只匹配任意字符+@ @ad8qwr8
+console.log(d.replace(/.@$/g, '8')) //只匹配最后一个任意字符+@  @adf@qwr8
+
+
+// 量词匹配
+let f = '12345678'
+console.log(f.replace(/\d{3,6}/g, 'X')) // X78 会匹配数字出现最多的6次
+console.log(f.replace(/\d{3,6}?/g, 'X')) // XX78 会匹配出现次数最少的3次
+// 分组匹配
+let g = 'a1b2c3v4h5'
+console.log(g.replace(/([a-z]\d){3}/g, 'X')) // Xv4h5
+// 捕获
+let g1 = '2019-01-29'
+console.log(g1.replace(/(\d{4})-(\d{2})-(\d{2})/g, '$2-$3-$1'))
+
+
+
+let result = [
+    {createTime: 1548677742019, apCode: "f20a1de26b6a81f87f863065ce1469c5"},
+    {createTime: 1548677, apCode: "f20a1de26b6a81f87f8d"},
+    {createTime: 15486777420, apCode: "f20a1de26s065ce1469c5"},
+    {createTime: 1548677742019, apCode: "f20asf87f863065ce1469c5"},
+    {createTime: 1548677, apCode: "f20asf87f3459c5"}
+]
+
+function sortId(a,b){  
+   return b.createTime-a.createTime  
+}
+result.sort(sortId)
+console.log(result)
+
+function isURL(str_url) {// 验证url
+    var strRegex = "^((https|http|ftp|rtsp|mms)?://)"  
+    + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@  
+    + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184  
+    + "|" // 允许IP和DOMAIN（域名）  
+    + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.  
+    + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名  
+    + "[a-z]{2,6})" // first level domain- .com or .museum  
+    + "(:[0-9]{1,4})?" // 端口- :80  
+    + "((/?)|" // a slash isn't required if there is no file name  
+    + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$" 
+    var re = new RegExp(strRegex)
+    return re.test(str_url)
+}
+var testUrl
+// testUrl="http://api.clickwifi.net/api"
+   // testUrl="http://scene/:appId"
+
+// alert(isURL(testUrl))
+
+</script>
+</html>
